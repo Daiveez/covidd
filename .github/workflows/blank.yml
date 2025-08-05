@@ -1,4 +1,4 @@
-name: ML Model Pipeline
+name: ML Notebook Pipeline
 
 on:
   push:
@@ -8,11 +8,11 @@ on:
   workflow_dispatch:
 
 jobs:
-  train-model:
+  run-notebook:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
+      - name: Checkout code
         uses: actions/checkout@v4
 
       - name: Set up Python
@@ -23,11 +23,11 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install -r requirements.txt
+          pip install notebook nbconvert torch torchvision numpy pandas pathlib matplotlib opencv-python
 
-      - name: Run training
+      - name: Run Jupyter Notebook
         run: |
-          python train.py
+          jupyter nbconvert --to notebook --execute notebook.ipynb --output executed.ipynb
 
       - name: Upload model artifact
         uses: actions/upload-artifact@v4
